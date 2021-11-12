@@ -1,0 +1,13 @@
+---
+- name: Importing linux_packages.yml
+  import_playbook: linux_programs.yml
+  when: "'linux_servers' is in groups and 'windows_servers' is not in groups"
+
+- name: Importing windows_packages.yml
+  import_playbook: windows_programs.yml
+  when: "'windows_servers' is in groups and 'linux_servers' is not in groups"
+
+- name: Importing list_programs.yml
+  import_playbook: list_programs.yml
+  when: "'linux_servers' and 'windows_servers' is in groups"
+...

@@ -1,0 +1,69 @@
+---
+- name: Gather linux servers facts
+  hosts: linux_servers
+  gather_facts: true
+  tasks:
+    - name: Getting installed packages
+      package_facts:
+        manager: auto
+        strategy: first
+
+    - name: Writing linux_servers_info.csv
+      template:
+        src: linux_packages.j2
+        dest: linux_servers_info.csv
+        force: yes
+      delegate_to: localhost
+
+- name: Gather Windows servers programs
+  hosts: windows_servers
+  gather_facts: true
+  tasks:
+    - name: Output programs
+      win_command: |
+        powershell.exe Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion | Export-Csv -Path .\{{ inventory_hostname }}_windows_info.csv -NoTypeInformation
+        $data = Import-Csv .\{{ inventory_hostname }}_windows_info.csv
+        $hostname = hostname
+        $data | Select-Object *, @{n='ServerName';e={'{{ ansible_product_uuid }}'}}, @{n='OS';e={'{{ ansible_os_family }}'}}, @{n='Time';e={'{{ ansible_date_time.date }}'}} | ConvertTo-Csv -NoType | Select-Object -Skip 1 | Set-Content .\{{ inventory_hostname }}_windows_info.csv
+
+    - name: Fetch program output
+      fetch:
+        src: "{{ inventory_hostname }}_windows_info.csv"
+        dest: "{{ inventory_hostname }}_windows_info.csv"
+        flat: true
+
+    - name: Removing commas
+      lineinfile:
+        path: "{{ inventory_hostname }}_windows_info.csv"
+        regexp: '"","","*"'
+        line: ''
+        state: absent
+      delegate_to: localhost
+
+- name: Append info
+  hosts: localhost
+  tasks:
+    - name: Appending linux and windows data files
+      copy:
+        src: data_template.csv
+        dest: complete_data.csv
+        force: true
+
+    - name: Appending linux and windows data files
+      shell: "cat *_info.csv >> complete_data.csv && sed -i -e 's/\r//g' complete_data.csv"
+
+- name: Update table values
+  hosts: mainserver
+  become: true
+  tasks:
+    - name: Update complete_data.csv
+      copy:
+        src: complete_data.csv
+        dest: complete_data.csv
+        force: true
+
+    - name: Inserting values
+      mysql_db:
+        name: serversdata
+        state: import
+        target: /var/lib/mysql/insert_data_apps.sql

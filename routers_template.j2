@@ -1,0 +1,31 @@
+{% for host in groups['routers'] %}
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Hostname", "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Main_Group", "{{ hostvars[host]['group_names'] | select('match','(cisco|eos|vyos)_group$') | list | join('\n') | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Groups", "{{ hostvars[host]['group_names'] | join(', ') | trim | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "API", "{{ hostvars[host]['ansible_facts']['net_api'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Version", "{{ hostvars[host]['ansible_facts']['net_version'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Model", "{{ hostvars[host]['ansible_facts']['net_model'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Subset", "{{ hostvars[host]['ansible_facts']['net_gather_subset'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Gather_Network_Resources", "{{ hostvars[host]['ansible_facts']['net_gather_network_resources'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Neighbors", "{{ hostvars[host]['ansible_facts']['net_neighbors'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Python_Version", "{{ hostvars[host]['ansible_facts']['net_python_version'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Network_Resources", "{{ hostvars[host]['ansible_facts']['network_resources'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Filesystems", "{{ hostvars[host]['ansible_facts']['net_filesystems'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Filesystems_Info", "{{ hostvars[host]['ansible_facts']['net_filesystems_info'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Memtotal_Mb", "{{ hostvars[host]['ansible_facts']['net_memtotal_mb'] | default('', true) | int }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Memfree_Mb", "{{ hostvars[host]['ansible_facts']['net_memfree_mb']  | default('', true) | int }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "All_IPV4_Addresses", "{{ hostvars[host]['ansible_facts']['net_all_ipv4addresses'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "All_IPV6_Addresses", "{{ hostvars[host]['ansible_facts']['net_all_ipv6addresses'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "System", "{{ hostvars[host]['ansible_facts']['net_system'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Interfaces", "{{ hostvars[host]['ansible_facts']['net_interfaces'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "Image", "{{ hostvars[host]['ansible_facts']['net_image'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "IOSType", "{{ hostvars[host]['ansible_facts']['net_iostype'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "FQDN", "{{ hostvars[host]['ansible_facts']['net_fqdn'] | default('', true) }}",
+   "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "SerialNum", "{{ hostvars[host]['ansible_facts']['net_serialnum'] | default('', true) }}"
+{% if ansible_local is defined %}
+{% for item in ansible_local.values () %}
+ "{{ hostvars[host]['ansible_facts']['net_hostname'] | default('', true) }}", "{{ item['name'] }}", "{{ item['value'] }}" }
+{% endfor %}
+{% else %}
+{% endif %}
+{% endfor %}

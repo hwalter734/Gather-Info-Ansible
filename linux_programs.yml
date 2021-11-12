@@ -1,0 +1,42 @@
+---
+- name: Gather hosts facts
+  hosts: linux_servers
+  tasks:
+    - name: Getting installed packages
+      package_facts:
+        manager: auto
+        strategy: first
+
+    - name: Completing info
+      template:
+        src: linux_packages.j2
+        dest: linux_servers_info.csv
+      delegate_to: localhost
+
+    - name: Setting up template
+      copy:
+        src: data_template.csv
+        dest: complete_data.csv
+        force: true
+      delegate_to: localhost
+
+    - name: Appending linux servers data file
+      shell: "cat linux_servers_info.csv >> complete_data.csv"
+      delegate_to: localhost
+
+- name: Update table values
+  hosts: mainserver
+  become: true
+  tasks:
+    - name: Update complete_data.csv
+      copy:
+        src: complete_data.csv
+        dest: complete_data.csv
+        force: true
+
+    - name: Inserting values
+      mysql_db:
+        name: serversdata
+        state: import
+        target: /var/lib/mysql/insert_data_apps.sql
+...

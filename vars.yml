@@ -1,0 +1,22 @@
+---
+resource_group: maingroup
+public_ip_name: maingroupip
+vn_name: mynetwork
+security_group_name: main_sg
+location: eastus
+admin_username: hansw
+admin_password: hanswgt123!
+vn_address_var: "10.1.0.0/16"
+ubuntu_instance_addr: "10.0.1.0/24"
+ubuntu_subnet_name: ubuntusubnet
+ubuntu_instance_name: ubuntuinstance
+windows_instance_addr: "10.0.2.0/24"
+windows_instance_name: windowsinstance
+windows_subnet_name: windowssubnet
+rhel_instance_addr: "10.0.3.0/24"
+rhel_subnet_name: rhelsubnet
+rhel_instance_name: rhelinstance
+cisco_instance_addr: "10.0.4.0/24"
+cisco_subnet_name: ciscosubnet
+cisco_instance_name: ciscoinstance
+...

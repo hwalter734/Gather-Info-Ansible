@@ -1,0 +1,16 @@
+[linux_servers]
+mainserver ansible_host=20.106.148.77 ansible_python_interpreter=/usr/bin/python3
+rhelserver ansible_host=52.226.22.215 
+[windows_servers]
+windowsserver ansible_host=137.117.85.153   
+[windows_servers:vars]
+ansible_connection=winrm 
+ansible_winrm_transport=ntlm 
+ansible_winrm_server_cert_validation=ignore
+become_method=runas 
+become_user=admin
+[all:vars]
+remote_user=hansw 
+ansible_user=hansw 
+ansible_sudo_pass=hanswgt123! 
+ansible_password=hanswgt123!

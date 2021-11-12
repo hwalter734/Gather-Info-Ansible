@@ -1,0 +1,5 @@
+{% for host in groups['linux_servers'] %}
+{% for item in ansible_facts.packages.values() %}
+"{{ item[0]['name'] }}","{{ item[0]['version'] }}","{{ hostvars[host]['ansible_product_uuid'] }}","{{ hostvars[host]['ansible_os_family'] }}","{{ ansible_date_time.date }}"
+{% endfor %}
+{% endfor %}

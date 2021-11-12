@@ -1,0 +1,19 @@
+---
+- name: Gather network devices facts
+  hosts: routers
+  connection: network_cli
+  tasks:
+    - name: Creating network_devices_data.json
+      template:
+        src: routers_template.j2
+        dest: /var/lib/awx/projects/gbm_cmdb/html/data/network_devices_data.json
+        force: yes
+      delegate_to: localhost
+      become: yes
+      become_user: root
+
+    - name: Setting up empty hosts page
+      copy:
+        src: html/data/empty_hosts_data.json
+        dest: html/data/hosts_data.json
+        force: yes

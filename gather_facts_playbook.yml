@@ -1,0 +1,84 @@
+---
+- name: Gather Windows servers devices facts
+  hosts: windows_servers
+  tasks:
+    - name: Getting disks info of windows servers
+      win_disk_facts:
+
+    - name: Output first disk size
+      set_fact:
+        totaldiskspace: "{{ ansible_facts.disks[0].size // 1073741824 }}"
+
+    - name: execute powershell
+      win_command: powershell.exe "Get-PSDrive C | Select-Object Free | ConvertTo-Json"
+      register: getpsdrive
+
+    - name: Register freediskspace as a fact
+      set_fact:
+        freediskspace: "{{ (getpsdrive.stdout | from_json).Free // 1073741824 }}"
+      when: "'windows_servers' is in groups"
+
+- name: Gather linux servers devices facts
+  hosts: linux_servers
+  tasks:
+    - name: Setting up custom devices facts
+      set_fact:
+        my_devs: "{{ ansible_devices.keys() | reject('match', '^loop(.*)$') | list }}"
+
+    - name: Formatting device facts
+      set_fact:
+        user_devs: "{{ user_devs|default([]) + [ansible_mounts|selectattr('device', 'match', my_regex) | list | json_query(my_query)] | first }}"
+      loop: "{{ my_devs }}"
+      vars:
+        my_regex: '^(.*){{ item }}(.*)$'
+        my_query: '[].[device, size_total, size_available]'
+
+- name: Gather network devices facts
+  hosts: routers
+  connection: network_cli
+  tasks:
+    - name: Creating routers_facts.csv
+      template:
+        src: routers_template.j2
+        dest: routers_facts_gathered.csv
+        force: yes
+      delegate_to: localhost
+
+- name: Gather normal hosts facts
+  hosts: normal_hosts
+  tasks:
+    - name: Creating hosts_template.j2
+      template:
+        src: hosts_template.j2
+        dest: normal_facts_gathered.csv
+        force: yes
+      delegate_to: localhost
+
+- name: Append info
+  hosts: localhost
+  tasks:
+    - name: Setting up csv
+      copy:
+        src: facts_template.csv
+        dest: hosts_facts.csv
+        force: true
+
+    - name: Appending all data files
+      shell: "cat *_gathered.csv >> hosts_facts.csv"
+
+- name: Update table values
+  hosts: mainserver
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Update hosts_facts.csv
+      copy:
+        src: hosts_facts.csv
+        dest: hosts_facts.csv
+        force: true
+
+    - name: Inserting values
+      mysql_db:
+        name: serversdata
+        state: import
+        target: /var/lib/mysql/insert_data_facts.sql

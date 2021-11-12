@@ -1,0 +1,50 @@
+{% for host in groups['normal_servers'] %}
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Main_Group", "{{ hostvars[host]['group_names'] | reject('match','^normal_hosts$') | list | join(',') | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Groups", "{{ hostvars[host]['ansible_hostname'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "FQDN", "{{ hostvars[host]['ansible_fqdn'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "All_IPV4_Addresses", "{{ hostvars[host]['ansible_all_ipv4_addresses'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "All_IPV6_Addresses", "{{ hostvars[host]['ansible_all_ipv6_addresses'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "OS", "{{ hostvars[host]['ansible_distribution'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Kernel", "{{ hostvars[host]['ansible_kernel'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Architecture", "{{ hostvars[host]['ansible_architecture'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Virt", "{{ hostvars[host]['ansible_virtualization_type'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "CPU_Type", "{{ hostvars[host]['ansible_processor'][-1] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "VCPUs", "{{ hostvars[host]['ansible_processor_vcpus'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "RAM", "{{ hostvars[host]['ansible_memory_mb']['real']['total'] | default('', true) }}"
+{% if hostvars[host]['ansible_os_family'] == "Windows" %}
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "PhysDisk_Sizes", "DiskSpaceTotal[MB]: {{ hostvars[host]['totaldiskspace'] | int * 1000 }}, FreeSpace[MB]: {{ hostvars[host]['freediskspace'] | int * 1000 }}"
+{% else %}
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "PhysDisk_Sizes", "{% for dev in user_devs %}Device:{{ dev[0] }} Free[MB]:{{ (dev[2] / 1048576) | int }}{% endfor %}"
+{% endif %}
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "n_of_interfaces", "{{ hostvars[host]['ansible_interfaces'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "ProdName", "{{ hostvars[host]['ansible_product_name'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "ProdSerial", "{{ hostvars[host]['ansible_product_serial'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "NodeName", "{{ hostvars[host]['ansible_nodename'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "FormFactor", "{{ hostvars[host]['ansible_form_factor'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "VirtualizationType", "{{ hostvars[host]['ansible_virtualization_type'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Vendor", "{{ hostvars[host]['ansible_system_vendor'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "VirtRole", "{{ hostvars[host]['ansible_virtualization_role'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Machine", "{{ hostvars[host]['ansible_machine'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "ProcessorCount", "{{ hostvars[host]['ansible_processor_count'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "ProcessorCores", "{{ hostvars[host]['ansible_processor_cores'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "ProcessorThreadsPerCore", "{{ hostvars[host]['ansible_processor_threads_per_core'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "MemFreeMb", "{{ hostvars[host]['ansible_memfree_mb'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "SwapTotalMb", "{{ hostvars[host]['ansible_swaptotal_mb'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "SwapFreeMb", "{{ hostvars[host]['ansible_swapfree_mb'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "System", "{{ hostvars[host]['ansible_system'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "OSFamily", "{{ hostvars[host]['ansible_os_family'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "DistVersion", "{{ hostvars[host]['ansible_distribution_version'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "DistRelease", "{{ hostvars[host]['ansible_distribution_release'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "UserSpaceBits", "{{ hostvars[host]['ansible_userspace_bits'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "UserSpaceArchitecture", "{{ hostvars[host]['ansible_userspace_architecture'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "SELinux", "{{ hostvars[host]['ansible_selinux'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "PackageManager", "{{ hostvars[host]['ansible_pkg_mgr'] | default('', true) }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "Domain", "{{ hostvars[host]['ansible_domain'] }}"
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "RevisionDate", "{{ ansible_date_time.date }}"
+{% if ansible_local is defined %}
+{% for item in ansible_local.values() %}
+"{{ hostvars[host]['ansible_hostname'] | default('', true) }}", "{{ item['name'] }}", "{{ item['value'] }}" }
+{% endfor %}
+{% else %}
+{% endif %}
+{% endfor %}

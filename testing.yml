@@ -1,0 +1,18 @@
+---
+- name: Testing
+  hosts: mainserver
+  become: yes
+  tasks:
+    - name: Upload sql scripts
+      copy:
+        src: "{{ item }}"
+        dest: "/var/lib/mysql/{{ item }}"
+      with_items:
+        - create_table.sql
+        - insert_data.sql
+
+    - name: Create servers info table
+      mysql_db:
+        name: serversdata
+        state: import
+        target: /var/lib/mysql/create_table.sql
