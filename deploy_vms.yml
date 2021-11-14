@@ -78,14 +78,6 @@
         virtual_network: "{{ vn_name }}"
         security_group: "{{ sg_name }}"
 
-    - name: Creating Cisco subnet
-      azure_rm_subnet:
-        name: "{{ cisco_subnet_name }}"
-        resource_group: "{{ resource_group }}"
-        address_prefix_cidr: "{{ cisco_instance_addr }}"
-        virtual_network: "{{ vn_name }}"
-        security_group: "{{ sg_name }}"
-
     - name: Creating a public ip for RHEL instance
       azure_rm_publicipaddress:
         name: "{{ rhel_instance_name }}"
@@ -101,12 +93,6 @@
     - name: Creating a public ip for Ubuntu instance
       azure_rm_publicipaddress:
         name: "{{ ubuntu_instance_name }}"
-        resource_group: "{{ resource_group }}"
-        allocation_method: Static
-
-    - name: Creating a public ip for Cisco instance
-      azure_rm_publicipaddress:
-        name: "{{ cisco_instance_name }}"
         resource_group: "{{ resource_group }}"
         allocation_method: Static
 
@@ -135,15 +121,6 @@
         virtual_network: "{{ vn_name }}"
         subnet: "{{ ubuntu_subnet_name }}"
         public_ip_name: "{{ ubuntu_instance_name }}"
-        security_group: "{{ sg_name }}"
-
-    - name: Creating virtual network interface card for Cisco instance
-      azure_rm_networkinterface:
-        name: "{{ cisco_instance_name }}"
-        resource_group: "{{ resource_group }}"
-        virtual_network: "{{ vn_name }}"
-        subnet: "{{ cisco_subnet_name }}"
-        public_ip_name: "{{ cisco_instance_name }}"
         security_group: "{{ sg_name }}"
 
     - name: Creating RHEL instance
