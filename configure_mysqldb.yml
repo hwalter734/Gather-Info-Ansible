@@ -4,5 +4,5 @@
   become: true
   become_method: sudo
   roles:
-    - ansible-role-mysql
+    - roles/ansible-role-mysql
 ...

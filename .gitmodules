@@ -1,0 +1,3 @@
+[submodule "ansible-role-mysql"]
+	path = ansible-role-mysql
+	url = https://github.com/hwalter734/Gather-Info-Ansible.git
