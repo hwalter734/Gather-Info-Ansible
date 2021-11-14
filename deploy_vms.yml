@@ -184,17 +184,6 @@
           version: latest
         state: present
 
-    - name: Getting facts of Windows public IP
-      azure_rm_publicipaddress_info:
-        resource_group: "{{ resource_group }}"
-        name: "{{ windows_instance_name }}"
-      register: publicipaddresses
-
-    - name: set public ip address fact
-      set_fact: publicipaddress="{{ publicipaddresses | json_query('publicipaddresses[0].ip_address')}}"
-
-    - name: wait for the WinRM port to come online
-      wait_for:
-        port: 5986
-        host: '{{ publicipaddress }}'
-        timeout: 600
+    - name: Wait for WinRM port to come online
+      pause:
+        minutes: 5
