@@ -16,7 +16,6 @@
             ip_var_subnet_1: "{{ ubuntu_instance_addr | ipaddr }}"
             ip_var_subnet_2: "{{ windows_instance_addr | ipaddr }}"
             ip_var_subnet_3: "{{ rhel_instance_addr | ipaddr }}"
-            ip_var_subnet_4: "{{ cisco_instance_addr | ipaddr }}"
 
         - name: Checking virtual network ip...
           fail:
@@ -26,7 +25,7 @@
         - name: Checking virtual subnet's ip...
           fail:
             msg: One or more of the provided ip is not valid, please enter a valid ip
-          when: ip_var_subnet_1 == false or ip_var_subnet_2 == false or ip_var_subnet_3 == false or ip_var_subnet_4 == false
+          when: ip_var_subnet_1 == false or ip_var_subnet_2 == false or ip_var_subnet_3 == false
 
 
     - name: Creating ingress TCP rules for all servers
