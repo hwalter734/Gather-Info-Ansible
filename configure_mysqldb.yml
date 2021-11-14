@@ -5,36 +5,4 @@
   become_method: sudo
   roles:
     - ansible-role-mysql
-  tasks:
-    - name: Start the MySQL service
-      service:
-        name: mysql
-        state: started
-
-    - name: Create servers info database
-      mysql_db:
-        name: serversdata
-        state: present
-
-    - name: Upload sql scripts
-      copy:
-        src: "{{ item }}"
-        dest: "/var/lib/mysql/{{ item }}"
-      with_items:
-        - create_table_apps.sql
-        - create_table_facts.sql
-        - insert_data_apps.sql
-        - insert_data_facts.sql
-
-    - name: Create servers info table
-      mysql_db:
-        name: serversdata
-        state: import
-        target: /var/lib/mysql/create_table_apps.sql
-
-    - name: Create servers facts table
-      mysql_db:
-        name: serversdata
-        state: import
-        target: /var/lib/mysql/create_table_facts.sql
 ...
