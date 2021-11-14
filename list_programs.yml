@@ -24,7 +24,7 @@
         powershell.exe Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion | Export-Csv -Path .\{{ inventory_hostname }}_windows_info.csv -NoTypeInformation
         $data = Import-Csv .\{{ inventory_hostname }}_windows_info.csv
         $hostname = hostname
-        $data | Select-Object *, @{n='ServerName';e={'{{ ansible_product_uuid }}'}}, @{n='OS';e={'{{ ansible_os_family }}'}}, @{n='Time';e={'{{ ansible_date_time.date }}'}} | ConvertTo-Csv -NoType | Select-Object -Skip 1 | Set-Content .\{{ inventory_hostname }}_windows_info.csv
+        $data | Select-Object *, @{n='ServerName';e={'{{ ansible_hostname }}'}}, @{n='OS';e={'{{ ansible_os_family }}'}}, @{n='Time';e={'{{ ansible_date_time.date }}'}} | ConvertTo-Csv -NoType | Select-Object -Skip 1 | Set-Content .\{{ inventory_hostname }}_windows_info.csv
 
     - name: Fetch program output
       fetch:
